@@ -6,29 +6,26 @@ import org.junit.Test;
 
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 
-import io.jenkins.plugins.analysis.core.model.AnalysisResult;
 import io.jenkins.plugins.analysis.core.steps.IssuesRecorder;
 import io.jenkins.plugins.analysis.core.steps.ToolConfiguration;
 import io.jenkins.plugins.analysis.core.testutil.IntegrationTest;
-import io.jenkins.plugins.analysis.core.views.ResultAction;
-import static org.assertj.core.api.Assertions.*;
 
 import hudson.model.AbstractProject;
 import hudson.model.Result;
-import hudson.model.Run;
 
 /**
  * This class is a generic way to test {@link io.jenkins.plugins.analysis.core.quality.QualityGate} with an {@link
  * AbstractProject}.
  *
- * @param <T> type of the project to test quality gate with
+ * @param <T>
+ *         type of the project to test quality gate with
  *
  * @author Michaela Reitschuster
  */
 public abstract class AbstractQualityGateITest<T extends AbstractProject> extends IntegrationTest {
     /**
-     * Returns the project which is used to be tested.
-     * This makes the implementation of the method mandatory so that all extending classes can be used for the QualityGateIntegrationTest.
+     * Returns the project which is used to be tested. This makes the implementation of the method mandatory so that all
+     * extending classes can be used for the QualityGateIntegrationTest.
      *
      * @return T project to test.
      */

@@ -2,7 +2,14 @@ package io.jenkins.plugins.analysis.warnings;
 
 import java.io.IOException;
 
+import org.junit.Before;
+import org.jvnet.hudson.test.ToolInstallations;
+
+import hudson.FilePath;
 import hudson.maven.MavenModuleSet;
+import hudson.model.TopLevelItem;
+import hudson.tasks.Maven;
+import hudson.tasks.Maven.MavenInstallation;
 
 /**
  * Integration tests of {@link hudson.maven.MavenModuleSet} with {@link io.jenkins.plugins.analysis.core.quality.QualityGate}.
@@ -11,11 +18,32 @@ import hudson.maven.MavenModuleSet;
  */
 public class MavenProjectQualityGateITest extends AbstractQualityGateITest<MavenModuleSet> {
 
+    @Before
+    public void initializeMaven() throws Exception {
+        MavenInstallation mvn = ToolInstallations.configureMaven35();
+        MavenInstallation m3 = new MavenInstallation("apache-maven-3.3.9", mvn.getHome(), j.NO_PROPERTIES);
+        j.jenkins.getDescriptorByType(Maven.DescriptorImpl.class).setInstallations(m3);
+
+    }
+
     @Override
     protected MavenModuleSet getProject() {
         MavenModuleSet project = createJob();
         copyFilesToWorkspace(project, "checkstyle-qualitygate.xml");
+        copyToWorkspace(project, "pom.xml");
         return project;
+    }
+
+    private void copyToWorkspace(final TopLevelItem job, final String... fileNames) {
+        try {
+            FilePath workspace = j.jenkins.getWorkspaceFor(job);
+            for (String fileName : fileNames) {
+                workspace.child(fileName).copyFrom(asInputStream(fileName));
+            }
+        }
+        catch (IOException | InterruptedException e) {
+            throw new AssertionError(e);
+        }
     }
 
     private MavenModuleSet createJob() {
@@ -26,4 +54,5 @@ public class MavenProjectQualityGateITest extends AbstractQualityGateITest<Maven
             throw new AssertionError(e);
         }
     }
+
 }
